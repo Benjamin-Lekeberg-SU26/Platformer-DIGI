@@ -6,10 +6,13 @@ public class playerMovement : MonoBehaviour
 {
     bool isGrounded;
     [SerializeField] float moveSpeed = 4f;
-    [SerializeField] float jumpForce = 20f;
+    [SerializeField] float jumpForce = 7f;
+    [SerializeField] float doubleJumpForce = 5f;
     Rigidbody2D rb;
     Vector2 moveInput;
     [SerializeField] ContactFilter2D groundFilter;
+    float currentYVelocity;
+    bool canDoubleJump = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,12 +34,13 @@ public class playerMovement : MonoBehaviour
     void Update()
     {
         Move();
+
+        currentYVelocity = rb.linearVelocity.y;
     }
 
     void FixedUpdate()
     {
         isGrounded = rb.IsTouching(groundFilter);
-
     }
 
     void Move()
@@ -49,7 +53,25 @@ public class playerMovement : MonoBehaviour
         if (isGrounded)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            canDoubleJump = true;
+        }
+        else if (canDoubleJump)
+        {
+            DoubleJump();
         }
     }
 
+    void DoubleJump()
+    {
+        if (currentYVelocity < 0) // If the player is falling, apply a stronger force to counteract the downward velocity
+        {
+            rb.AddForce(Vector2.up * (doubleJumpForce - currentYVelocity), ForceMode2D.Impulse);
+            canDoubleJump = false;
+        }
+        else
+        {
+            rb.AddForce(Vector2.up * doubleJumpForce, ForceMode2D.Impulse);
+            canDoubleJump = false;
+        }
+    }
 }
