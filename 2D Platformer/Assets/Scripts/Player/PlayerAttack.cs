@@ -21,6 +21,11 @@ public class PlayerAttack : MonoBehaviour
         {
             FindAnyObjectByType<PlayerHealth>().HealthDepletion();
         }
+
+        if (collision.gameObject.CompareTag("Spike"))
+        {
+            FindAnyObjectByType<LevelManager>().RestartScene();
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
