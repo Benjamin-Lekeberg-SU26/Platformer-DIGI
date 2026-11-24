@@ -30,7 +30,8 @@ public class PlayerAttack : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Killbox"))
+        if (collision.gameObject.CompareTag("Killbox") ||
+            collision.gameObject.CompareTag("Spike"))
         {
             FindAnyObjectByType<LevelManager>().RestartScene();
         }
